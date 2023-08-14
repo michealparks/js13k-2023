@@ -1,0 +1,10 @@
+/* @tailwind base; */
+/* smaller reset */
+* {
+  box-sizing: border-box;
+}
+html {
+  font-family: system-ui,sans-serif;
+}
+@tailwind components;
+@tailwind utilities;
