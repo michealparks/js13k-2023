@@ -13,9 +13,11 @@ module.exports = {
 	],
 	ignorePatterns: ['*.cjs'],
 	rules: {
+		'prefer-const': 'off',
 		'@typescript-eslint/no-non-null-assertion': 'off',
 		'unicorn/consistent-destructuring': 'off',
 		'unicorn/prefer-math-trunc': 'off',
+		'unicorn/prevent-abbreviations': 'off',
 	},
 	parser: '@typescript-eslint/parser',
 	parserOptions: {

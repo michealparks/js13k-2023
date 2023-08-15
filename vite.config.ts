@@ -5,7 +5,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
   plugins: [svelte()],
   build: {
-    minify: 'terser',
+    minify: false, // 'terser',
     cssMinify: 'esbuild',
     modulePreload: false,
     target: 'esnext',

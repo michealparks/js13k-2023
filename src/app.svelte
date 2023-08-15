@@ -1,25 +1,40 @@
 <script lang='ts'>
 
-import './lib/components'
+import './lib/systems'
+import { tick } from 'svelte'
 import { shadows } from './lib/shadows'
+import Lights from './lib/components/lights.svelte'
+import Environment from './lib/components/environment.svelte'
+import Person from './lib/components/person.svelte';
+
+const handleLoad = async (event: any) => {
+  await tick()
+  shadows(event.target.object3D)
+}
+
+const handleCameraLoad = (event: any) => {
+  const [camera] = event.target.object3D.children
+  camera.lookAt(0, 0, 0)
+}
 
 </script>
 
 <a-scene
   vr-mode-ui='enterVRButton:#vr-btn'
   renderer='antialias:true;colorManagement:true;highRefreshRate:true;physicallyCorrectLights:true;toneMapping:ACESFilmic'
-  on:loaded={(event) => shadows(event.target.object3D)}
+  on:loaded={handleLoad}
 >
-  <a-box hover position='-1 1 -3' rotation='0 45 0' color='#787FF6' />
-  <a-sphere hover position='0 1.25 -5' radius='0.75' color='#1CA7EC' />
-  <a-cylinder hover position='1 1.5 -3' radius='0.3' height='1' color='#4ADEDE' />
+  <Lights />
+  <Environment />
+  <Person position='0 1.05 0' color='red' />
 
-  <a-cylinder position='0 0 -4' radius='3' height='0.1' color='#1F2F98' />
-
-  <a-sky color='#7BD5F5' />
-
-  <a-light type='ambient' intensity='10' color='#445451' />
-  <a-light type='directional' intensity='2' position='2 4 4' />
+  <a-entity position="0 3 0">
+    <a-camera
+      look-controls-enabled='false'
+      look-at='0 0 0'
+      on:loaded={handleCameraLoad}
+    />
+  </a-entity>
 </a-scene>
 
 <a

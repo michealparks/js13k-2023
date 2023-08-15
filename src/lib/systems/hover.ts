@@ -1,5 +1,5 @@
 import type { ComponentDefinition } from 'aframe'
-import { data, position } from './helpers'
+import { data, position, component } from './helpers'
 
 type Data = {
   /** Starting random value */
@@ -8,7 +8,7 @@ type Data = {
   y: number
 }
 
-AFRAME.registerComponent('hover', {
+component('hover', {
   update() {
     const d = data<Data>(this) 
     d.y = position(this).y
