@@ -15,6 +15,7 @@ module.exports = {
 	rules: {
 		'prefer-const': 'off',
 		'@typescript-eslint/no-non-null-assertion': 'off',
+		'unicorn/no-null': 'off',
 		'unicorn/consistent-destructuring': 'off',
 		'unicorn/prefer-math-trunc': 'off',
 		'unicorn/prevent-abbreviations': 'off',

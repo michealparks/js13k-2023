@@ -23,7 +23,7 @@ jobs:
       - name: Install and Build 🔧
         run: |
           npm ci --audit=false
-          npm run build -- --base=/aframe-template/
+          npm run build -- --base=/js13k-2023/
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

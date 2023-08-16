@@ -1,5 +1,5 @@
 import type { ComponentDefinition } from 'aframe'
-import { data, position, component } from './helpers'
+import { data, position, component } from '../helpers'
 
 type Data = {
   /** Starting random value */

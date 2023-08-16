@@ -2,6 +2,9 @@ import type { ComponentDefinition, SystemDefinition } from 'aframe';
 
 type Element = Required<ComponentDefinition>['el']
 
+export const eventObject = (event: { target: { object3D: THREE.Object3D } }) =>
+  event.target.object3D
+
 export const element = <T = Element>(component: ComponentDefinition) =>
   component.el as T
 
