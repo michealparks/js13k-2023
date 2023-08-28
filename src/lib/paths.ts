@@ -1,20 +1,23 @@
 import { vec3 } from './math'
 
-export let paths = (scene: THREE.Scene, dir: 1 | -1 = 1) => {
-  let points = []
+let addPoint = (points: THREE.Vector3[], x: number, z: number) =>
+  points.push(vec3.set(x, 0, z).clone())
+
+export let paths = (scene: THREE.Scene, dir: 1 | -1) => {
+  let points: THREE.Vector3[] = []
   let numSegments = 10
 
   let x = 0.4 * dir, z = 0
-  points.push(vec3.set(x, 0, z).clone())
+  addPoint(points, x, z)
 
   x += (0.5 * dir)
 
-  points.push(vec3.set(x, 0, z).clone())
+  addPoint(points, x, z)
 
   for (let i = 0; i < numSegments; i++) {
     x += (Math.random() * dir)
     z = ((Math.random() - 0.5) * 2)
-    points.push(vec3.set(x, 0, z).clone())
+    addPoint(points, x, z)
   }
 
   let path = new THREE.CatmullRomCurve3(points)

@@ -7,7 +7,7 @@ export let instancedMesh = (...args: ConstructorParameters<typeof THREE.Instance
 export let mesh = (...args: ConstructorParameters<typeof THREE.Mesh>) =>
   new THREE.Mesh(...args)
 
-export let plane = (width = 0, height = 0, args: THREE.MeshStandardMaterialParameters) => new THREE.Mesh(
+export let plane = (width = 0, height = 0, args: THREE.MeshStandardMaterialParameters) => mesh(
   new THREE.PlaneGeometry(width, height),
   meshStandardMat(args),
 )

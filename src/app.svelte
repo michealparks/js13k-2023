@@ -10,6 +10,7 @@ import { eventObject } from './lib/components/helpers'
 import Parchment from './lib/parchment.svelte'
 import { useThree } from './lib/hooks'
 import { state } from './lib/stores'
+  import { WebGLRenderer } from 'three';
 
 let ctx = useThree()
 let loaded = false
@@ -30,17 +31,6 @@ let lights = (scene: THREE.Scene) => {
   camera.right = camera.top = 5
 }
 
-let handleSceneLoad = (event: any) => {
-  let scene = eventObject(event) as THREE.Scene
-  ctx.scene = scene
-  trees()
-  armies()
-  paths(scene)
-  paths(scene, -1)
-  lights(scene)
-  loaded = true
-}
-
 let dominantHand = 'right'
 let nonDominantHand = 'left'
 
@@ -51,7 +41,22 @@ let nonDominantHand = 'left'
   fog='far:5;color:{skyBlue}'
   shadow='type:pcfsoft'
   renderer='antialias:true;colorManagement:true;highRefreshRate:true;physicallyCorrectLights:true;toneMapping:ACESFilmic'
-  on:loaded={handleSceneLoad}
+  on:loaded={(event) => {
+    let scene = eventObject(event)
+    let {renderer} = event.target
+    ctx.scene = scene
+    console.log(event.target.renderer)
+    renderer.xr.setFoveation(1)
+    try {
+      renderer.xr.getSession().updateTargetFrameRate(120)
+    } catch {}
+    trees()
+    armies()
+    paths(scene, 1)
+    paths(scene, -1)
+    lights(scene)
+    loaded = true
+  }}
   on:enter-vr={() => $state = 'intro'}
 >
   <a-sky color={skyBlue} />
@@ -63,10 +68,11 @@ let nonDominantHand = 'left'
   />
 
   {#each [dominantHand, nonDominantHand] as hand}
-    {@const dominant = hand === dominantHand}
     <a-entity
-      laser-controls='hand:{hand}'
-      raycaster='objects:.collidable;lineOpacity:${dominant ? 1 : 0};enabled:{dominant};autoRefresh:false'
+      visible={$state !== 'screen'}
+      id='hand_{hand}'
+      laser-controls='hand:{hand};model:false'
+      raycaster='objects:.collidable;lineOpacity:0;autoRefresh:false'
     />
   {/each}
 
@@ -81,9 +87,18 @@ let nonDominantHand = 'left'
       on:intersection={(event) => console.log(event)}
     >
       <a-gltf-model
-        src='castle.glb'
-        shadow
-        on:loaded={() => shadows(ctx.scene)}
+        src='castle-prod.glb'
+        on:model-loaded={(event) => {
+          let scepter = event.target.object3D.getObjectByName('scepter')
+          scepter.position.set(0, 0, 0)
+          window.hand_right.object3D.add(scepter)
+
+          let orb = event.target.object3D.getObjectByName('orb')
+          orb.position.set(0, 0, 0)
+          window.hand_left.object3D.add(orb)
+
+          shadows(ctx.scene)
+        }}
       />
     </a-cylinder>
 
@@ -111,7 +126,7 @@ let nonDominantHand = 'left'
         <div class='h-[900px] w-[1100px] text-5xl'>
           Pull the trigger on thy divine scepter to fire lasers. Hallowed by thy aim.
 
-          Lobby thy royal orb at foes to make them bend the knee to thy 2 megaton explosions.
+          Lobby thy royal orb at foes, and they shall surely bend the knee before the might of thy five megaton explosions.
         </div>
         {/if}
       </Parchment>
