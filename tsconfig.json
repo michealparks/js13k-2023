@@ -15,6 +15,7 @@
     "checkJs": true,
 
     "strict": true,
+    "allowUmdGlobalAccess": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "exactOptionalPropertyTypes": true,

@@ -17,12 +17,18 @@ export const position = (component: ComponentDefinition) =>
 export const data = <T = unknown>(component: ComponentDefinition) =>
   component.data as T
 
+export const on = (component: ComponentDefinition, event: string, fn: (event: Event) => void) =>
+  element(component).addEventListener(event, fn)
+
 export const component = (name: string, definition: ComponentDefinition) =>
   AFRAME.registerComponent(name, {
     ...definition,
-    // @ts-expect-error Exists
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    init() { this.system?.register(this.el) },
+    init() {
+      // @ts-expect-error Exists
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      this.system?.register(this.el)
+      definition.init?.call(this)
+    },
     // @ts-expect-error Exists
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     remove() { this.system?.deregister(this.el) },
@@ -35,3 +41,4 @@ export const system = (name: string, definition: SystemDefinition) =>
     register(element: Element) { this.entities.push(element) },
     deregister(element: Element) { this.entities.splice(this.entities.indexOf(element), 1) }
   })
+

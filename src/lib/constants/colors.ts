@@ -1,3 +1,5 @@
-export const kellyGreen = '#18A558'
-export const skyBlue = '#7BD5F5'
-export const roofTile = '#E2805F'
+export let kellyGreen = '#18A558'
+export let skyBlue = '#7BD5F5'
+export let roofTile = '#E2805F'
+export let tan = 'tan'
+export let brown = 'brown'
