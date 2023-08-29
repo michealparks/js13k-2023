@@ -4,12 +4,13 @@
   box-sizing: border-box
 }
 
-html {
+html, button {
   font-family: cursive
 }
 
-.a-enter-vr{
-  position: fixed !important
+.a-enter-vr {
+  position: fixed !important;
+  z-index: 1000 !important
 }
 
 @tailwind components;

@@ -1,4 +1,4 @@
-import { t } from './util/three'
+import { t } from './three'
 
 export let { random } = Math
 
@@ -14,3 +14,6 @@ export let randomPointBetweenCircles = (r1: number, r2: number): [x: number, y: 
 
 export let mat4 = new t.Matrix4()
 export let vec3 = new t.Vector3()
+export let quat = new t.Quaternion()
+export let scale = new t.Vector3()
+export let dummy = new t.Object3D()

@@ -1,10 +1,11 @@
 
 import { t, instancedMesh, meshStandardMat } from './util/three'
-import { vec3, mat4 } from './math'
+import { vec3, mat4, dummy } from './util/math'
 import { tan, brown } from './constants/colors'
-import { useThree } from './hooks'
+import { useFrame } from './components/frame'
+import { curves } from './paths'
 
-let count = 500
+let count = 1000
 let defaultSize = 0.1
 
 const boxes = (
@@ -23,8 +24,7 @@ const boxes = (
   )
 }
 
-export let armies = () => {
-  let { scene } = useThree()
+export let armies = (scene: THREE.Scene) => {
   let headsize = 0.01
   let heads = boxes(headsize, headsize, headsize, 0, 0.04, 0, tan)
 
@@ -50,12 +50,25 @@ export let armies = () => {
 
   scene.add(...parts)
 
-  for (let i = 0, j = 0; i < count; i++, j += 2) {
-    for (let part of parts) part.setMatrixAt(
-      i,
-      mat4.makeTranslation(
-        vec3.set(positions[j]!, 0, positions[j + 1]!)
-      )
-    )
-  }
+  useFrame((time) => {
+    let t = time / 70_000
+    
+    for (let i = 0, j = 0; i < count; i++, j += 2) {
+      let offset = i / 200
+
+      
+      curves[i % 2]!.smoothPath.getPointAt(1 - ((t + offset) % 1), dummy.position)
+      curves[i % 2]!.smoothPath.getPointAt(1 - ((t + offset + 0.01) % 1), vec3)
+      
+      dummy.position.y = (Math.sin(time / 50) / 300) + 0.015
+      dummy.lookAt(vec3.x, 0.03, vec3.z)
+      dummy.updateMatrix()
+
+      for (let part of parts)
+        part.setMatrixAt(i, dummy.matrix)
+    }
+
+    for (let part of parts)
+      part.instanceMatrix.needsUpdate = true
+  })
 }

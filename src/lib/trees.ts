@@ -1,9 +1,7 @@
-import { useThree } from './hooks'
-import { randomPointBetweenCircles, random, vec3, mat4 } from './math'
+import { randomPointBetweenCircles, random, vec3, mat4 } from './util/math'
 import { instancedMesh, meshStandardMat } from './util/three'
 
-export let trees = () => {
-  let { scene } = useThree()
+export let trees = (scene: THREE.Scene) => {
   let count = 1000
   let scale = 0.3
   let radius = 0.1

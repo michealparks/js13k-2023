@@ -1,3 +1,4 @@
+
 export let meshStandardMat = (args: THREE.MeshStandardMaterialParameters) =>
   new THREE.MeshStandardMaterial(args)
 
@@ -11,5 +12,11 @@ export let plane = (width = 0, height = 0, args: THREE.MeshStandardMaterialParam
   new THREE.PlaneGeometry(width, height),
   meshStandardMat(args),
 )
+
+export let getObjectByName = (object: THREE.Object3D, name: string) =>
+  object.getObjectByName(name)
+
+export let setPosition = (object: THREE.Object3D, x: number, y: number, z: number) =>
+  object.position.set(x, y, z)
 
 export let t = THREE

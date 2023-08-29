@@ -1,5 +1,5 @@
 import type { ComponentDefinition, Entity } from 'aframe'
-import { data, element, component, on } from './helpers'
+import { data, element, component, on } from '../util/helpers'
 import { t } from '../util/three'
 
 type Data = {
