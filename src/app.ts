@@ -123,18 +123,11 @@ let h1 = create('h1', {
 })
 h1.innerHTML = '<q>Keep Calm</q>'
 
-// let btn = create('button', {
-//   class: 'z-10 fixed bottom-8 text-5xl w-full text-white bg-transparent border-none'
-// }, {
-//   async click() {
-//     const session = await navigator.xr!.requestSession('immersive-vr', {
-//       optionalFeatures: ['local-floor', 'bounded-floor', 'hand-tracking', 'layers']
-//     })
-//     await renderer.xr.setSession(session)
-//     console.log('click')
-//   }
-// })
-// btn.innerHTML = hasNativeWebVRImplementation ? 'Start' : 'VR Unsupported'
+let h2 = create('h2', {
+  class: 'z-10 m-0 fixed bottom-5 right-24 text-3xl text-white'
+})
+h2.innerHTML = 'xr' in navigator
+  ? 'Begin thy reign →'
+  : 'Thy majesty must procure a magical VR crown'
 
-
-document.body.append(h1, aScene)
+document.body.append(h1, h2, aScene)
