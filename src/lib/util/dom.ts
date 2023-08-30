@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export let create = (
+export let create = <T = HTMLElement>(
   tag: string,
   attribs?: Record<string, any>,
   events?: Record<string, EventListenerOrEventListenerObject>
-) => {
+): T => {
   let el = document.createElement(tag)
   for (let attr in attribs) attrib(el, attr, attribs[attr])
   for (let event in events) on(el, event, events[event]!)
-  return el
+  return el as T
 }
 
 export let attrib = (

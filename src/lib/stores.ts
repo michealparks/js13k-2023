@@ -1,4 +1,9 @@
-import { writable } from 'svelte/store'
+import { writable } from './util/store'
 
+type States = 'screen' | 'intro' | 'tutorial' | 'game'
 
-export let state = writable<'screen' | 'intro' | 'tutorial' | 'game'>(localStorage.getItem('state') ?? 'screen')
+let initialState = (localStorage.getItem('state') ?? 'screen') as States
+
+export let state = writable<States>(initialState)
+export let firingLaser = writable<boolean>(false)
+export let laserEndPosition = writable<THREE.Vector3>(new THREE.Vector3())

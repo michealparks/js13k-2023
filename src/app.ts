@@ -1,6 +1,6 @@
 import './lib/components'
 import { skyBlue, kellyGreen } from './lib/constants/colors'
-import { shadows } from './lib/shadows'
+import { shadows } from './lib/util/shadows'
 import { trees } from './lib/trees'
 import { armies } from './lib/armies'
 import { paths } from './lib/paths'

@@ -1,4 +1,4 @@
-import { html2canvas } from './html2canvas'
+import { html2canvas } from './util/html2canvas'
 import { t, plane } from './util/three'
 import { create } from './util/dom'
 import { state } from './stores'

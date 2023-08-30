@@ -1,9 +1,11 @@
-let b = (el: HTMLElement | Range) => el.getBoundingClientRect()
+import { create } from "./dom"
+
+let bounding = (el: HTMLElement | Range) => el.getBoundingClientRect()
 
 export let html2canvas = (element: HTMLElement) => {
 	let range = document.createRange()
-  let offset = b(element)
-  let canvas = document.createElement('canvas') as unknown as HTMLCanvasElement
+  let offset = bounding(element)
+  let canvas = create<HTMLCanvasElement>('canvas')
   canvas.width = offset.width
   canvas.height = offset.height
 
@@ -20,7 +22,7 @@ export let html2canvas = (element: HTMLElement) => {
 	let drawElement = (element: ChildNode, style: CSSStyleDeclaration) => {
 		if (element.nodeType === Node.TEXT_NODE) {
 			range.selectNode(element)
-			let rect = b(range)
+			let rect = bounding(range)
 			drawText(
         style,
         rect.left - offset.left - 0.5,
