@@ -4,7 +4,7 @@ import { vec3, dummy } from './util/math'
 import { tan, brown } from './constants/colors'
 import { useFrame } from './components/frame'
 import { curves } from './paths'
-import { castleHealth, firingLaser, laserIntersection } from './stores'
+import { castleHealth, firingLaser, laserIntersection, state } from './stores'
 
 let count = 500
 let defaultSize = 0.1
@@ -31,7 +31,6 @@ let boxes = (
   mesh.frustumCulled = false
   return mesh
 }
-  
 
 export let armies = (scene: THREE.Scene) => {
   let headsize = 0.01
@@ -59,18 +58,27 @@ export let armies = (scene: THREE.Scene) => {
 
   scene.add(...parts)
 
-  setInterval(() => {
-    for (let i = 0; i < count; i += 1) {
-      if (intervals[i]! >= 5000) {
-        states[i] = 0
-        intervals[i] = 0
-        offsets[i] = 0
-        break
-      }
-    }
-  }, 500)
+  state.subscribe(value => {
+    if (value === 'intro') {
+      setInterval(() => {
+        for (let i = 0; i < count; i += 1) {
+          if (intervals[i]! >= 5000) {
+            states[i] = 0
+            intervals[i] = 0
+            offsets[i] = 0
+            break
+          }
+        }
+      }, 500)
 
-  let speed = 0.000_25
+      setInterval(() => {
+        if (speed < .001) speed += 0.0001
+        console.log(speed)
+      }, 500)
+    }
+  })
+  
+  let speed = 0.0005
 
   useFrame((time, delta) => {
     for (let i = 0, k = 0; i < count; i++, k += 6) {
@@ -80,7 +88,7 @@ export let armies = (scene: THREE.Scene) => {
       if (state === 0) {
         offsets[i] += speed
         if (offsets[i]! > 1) {
-          castleHealth.set(castleHealth.current - 0.1)
+          castleHealth.set(castleHealth.current - 1)
           offsets[i] = 0
           console.log(castleHealth.current)
         }

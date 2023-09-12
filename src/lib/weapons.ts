@@ -1,15 +1,17 @@
 import { shadows } from './util/shadows'
-import { eventObject, object } from './util/helpers'
+import { eventObject } from './util/helpers'
 import { getObjectByName } from './util/three'
 import { create, attrib } from './util/dom'
 import { aScene, scene } from './scene'
 import { useFrame } from './components/frame'
 import { firingLaser, firingBomb, laserIntersection } from './stores'
 
-let raycaster = 'objects:.collidable;lineOpacity:0.25;autoRefresh:false;interval:30'
+let raycaster = 'objects:.collidable;lineOpacity:0;autoRefresh:false;interval:30'
 
 let orbHandEl = create('a-entity', {
   visible: false,
+  'laser-controls': `hand:left;model:false`,
+  raycaster: 'enabled:false;lineOpacity:0',
 }, {
   triggerdown() { firingBomb.set(true) },
   triggerup() { firingBomb.set(false) }
@@ -42,7 +44,7 @@ const laserEnd = new THREE.Mesh(
 firingLaser.subscribe((value) => (laser.visible = laserEnd.visible = value))
 
 aScene.append(create('a-gltf-model', {
-  src: 'castle-prod.glb',
+  src: 'castle-prod-transformed.glb',
 }, {
   'model-loaded': (event) => {
     let scepter = getObjectByName(eventObject(event), 'scepter')!

@@ -1,6 +1,6 @@
 import './lib/components'
 import { skyBlue, kellyGreen } from './lib/constants/colors'
-import { create } from './lib/util/dom'
+import { attrib, create } from './lib/util/dom'
 import { aScene } from './lib/scene'
 import { castleHealth, laserIntersection } from './lib/stores'
 import './lib/weapons'
@@ -22,11 +22,10 @@ aScene.append(create('a-camera', {
   'look-controls-enabled': false,
 }))
 
-let text = create('a-text', { value: 'Castle health: 100%', width: '2', height: '1', position: '-0.5 0.4 0.2', rotation: '0 0 45' })
+let text = create('a-text', { value: 'Castle health: 100%', width: '2', height: '1', position: '-0.5 1 -1', rotation: '0 0 0' })
 aScene.append(text)
-console.log(text.object3D)
 
-castleHealth.subscribe((value) => text.value = `Castle health: ${value.toFixed(1)}%`)
+castleHealth.subscribe((value) => attrib(text, 'value', `Castle health: ${value.toFixed(1)}%`))
 
 aScene.append(create('a-cylinder', {
   radius: 30,
