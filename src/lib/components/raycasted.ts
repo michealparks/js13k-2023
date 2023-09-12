@@ -30,7 +30,12 @@ component('raycasted', {
       point.z === lastPoint.z
     ) return
 
-    el.emit('intersection', intersection)
+    console.log()
+
+    el.emit('intersection', {
+      ...intersection,
+      hand: d.raycaster?.components['laser-controls']?.data.hand,
+    })
     d.lastPoint = point
   }
 } satisfies ComponentDefinition)

@@ -1,82 +1,12 @@
 import './lib/components'
 import { skyBlue, kellyGreen } from './lib/constants/colors'
-import { shadows } from './lib/util/shadows'
-import { trees } from './lib/trees'
-import { armies } from './lib/armies'
-import { paths } from './lib/paths'
-import { parchment } from './lib/parchment'
-import { state } from './lib/stores'
-import { eventObject } from './lib/util/helpers'
-import { getObjectByName } from './lib/util/three'
-import { attrib, create, query } from './lib/util/dom'
+import { create } from './lib/util/dom'
+import { aScene } from './lib/scene'
+import { castleHealth, laserIntersection } from './lib/stores'
+import './lib/weapons'
 
-let renderer: THREE.WebGLRenderer
-
-let lights = (scene: THREE.Scene) => {
-  let dir = new THREE.DirectionalLight('#fff', 2)
-  scene.add(dir)
-  dir.position.set(1, 2, 1)
-  dir.target
-  
-  let { shadow } = dir 
-  shadow.bias = 0.000_01
-  shadow.mapSize.set(2048, 2048)
-  shadow.normalBias = 0.02
-
-  let { camera } = shadow
-  camera.left = camera.bottom = -5
-  camera.right = camera.top = 5
-}
-
-let aScene = create('a-scene', {
-  frame: '',
-  reflection: '',
-  fog: `far:5;color:${skyBlue}`,
-  shadow: 'type:pcfsoft',
-  // 'vr-mode-ui': 'enabled: false',
-  renderer: 'antialias:true;colorManagement:true;highRefreshRate:true;physicallyCorrectLights:true;toneMapping:ACESFilmic',
-}, {
-  loaded(event) {
-    renderer = (event.target as unknown as { renderer: THREE.WebGLRenderer }).renderer
-    renderer.xr.setFoveation(1)
-    trees(scene)
-    armies(scene)
-    parchment(scene)
-    paths(scene)
-    lights(scene)
-  },
-  'enter-vr': () => {
-    renderer.xr.getSession()?.updateTargetFrameRate(120)?.catch(() => { /* do nothing */ })
-    attrib(handLeftEl, 'visible', true)
-    attrib(handRightEl, 'visible', true)
-    state.set('intro')
-  }
-})
-
-let scene = aScene.object3D as THREE.Scene
-
-let raycaster = 'objects:.collidable;lineOpacity:1;autoRefresh:false'
-
-let handRightEl = create('a-entity', {
-  id: 'hand_left',
-  visible: false,
-  'laser-controls': `hand:left;model:false`,
-  raycaster,
-}, {
-  triggerdown() { console.log('triggerdown') },
-  triggerup() { console.log('triggerup') }
-})
-
-let handLeftEl = create('a-entity', {
-  id: 'hand_right',
-  visible: false,
-  'laser-controls': `hand:right;model:false`,
-  raycaster,
-}, {
-  triggerdown() { console.log('triggerdown') },
-  triggerup() { console.log('triggerup') }
-})
-aScene.append(handLeftEl, handRightEl)
+THREE.Object3D.DEFAULT_MATRIX_AUTO_UPDATE = false
+THREE.Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE = false
 
 aScene.append(create('a-sky', {
   color: skyBlue
@@ -92,6 +22,12 @@ aScene.append(create('a-camera', {
   'look-controls-enabled': false,
 }))
 
+let text = create('a-text', { value: 'Castle health: 100%', width: '2', height: '1', position: '-0.5 0.4 0.2', rotation: '0 0 45' })
+aScene.append(text)
+console.log(text.object3D)
+
+castleHealth.subscribe((value) => text.value = `Castle health: ${value.toFixed(1)}%`)
+
 aScene.append(create('a-cylinder', {
   radius: 30,
   height: 0.01,
@@ -100,21 +36,7 @@ aScene.append(create('a-cylinder', {
   raycasted: '',
 }, {
   intersection(event) {
-    console.log(event)
-  }
-}))
-
-aScene.append(create('a-gltf-model', {
-  src: 'castle-prod.glb',
-}, {
-  'model-loaded': (event) => {
-    let scepter = getObjectByName(eventObject(event), 'scepter')!
-    let orb = getObjectByName(eventObject(event), 'orb')!
-
-    query('#hand_right').object3D.add(scepter)
-    query('#hand_left').object3D.add(orb)
-
-    shadows(scene)
+    laserIntersection.update((value) => value.copy(event.detail.point))
   }
 }))
 

@@ -24,7 +24,7 @@ let createPath = (dir: 1 | -1) => {
   }
 
   let path = catmullRomCurve3(points)
-  let smoothPath = catmullRomCurve3(path.getPoints(n * 10))
+  let smoothPath = catmullRomCurve3(path.getPoints(n * 50))
   let tubeGeometry = new THREE.TubeGeometry(smoothPath, n * 10, 0.02, 6, false)
   let material = new THREE.MeshStandardMaterial({ color: '#B0BEC5', roughness: 1 })
   return { smoothPath, mesh: mesh(tubeGeometry, material) }
@@ -32,5 +32,6 @@ let createPath = (dir: 1 | -1) => {
 
 export let curves = [createPath(-1), createPath(1)] as const
 
-export let paths = (scene: THREE.Scene) =>
+export let paths = (scene: THREE.Scene) => {
   scene.add(curves[0].mesh, curves[1].mesh)
+}
